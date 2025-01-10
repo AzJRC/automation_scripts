@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Constants
+DISTRIBUTION=$(grep '^NAME=' /etc/os-release | awk -F= '{print $2}' | tr -d '"')
+
+VUNDLE_REPO="https://github.com/VundleVim/Vundle.vim.git"
+VUNDLE_DIR="$HOME/.vim/bundle/Vundle.vim"
+
+ALE_REPO="https://github.com/dense-analysis/ale.git"
+ALE_DIR="$HOME/.vim/pack/git-plugins/start/ale"
+
+FLAKE8_REPO="https://github.com/nvie/vim-flake8.git"
+FLAKE8_DIR="$HOME/.vim/pack/flake8/start"
+
+JEDI_REPO="https://github.com/davidhalter/jedi-vim.git"
+JEDI_DIR="$HOME/.vim/bundle/jedi-vim"
+
+# Step 1: Clone VimVundle if it doesn't already exist
+if [ ! -d "$VUNDLE_DIR" ]; then
+    git clone $VUNDLE_REPO $VUNDLE_DIR
+else
+    echo "Vundle.vim already exists at $VUNDLE_DIR"
+fi
+
+# Step 2: Clone Vim packages if they don't already exist
+if [ ! -d "$ALE_DIR" ]; then
+    mkdir -p "$ALE_DIR" && git clone --depth 1 $ALE_REPO $ALE_DIR
+else
+    echo "ALE already exists at $ALE_DIR"
+fi
+
+if [ ! -d "$FLAKE8_DIR" ]; then
+    mkdir -p "$FLAKE8_DIR" && git clone $FLAKE8_REPO $FLAKE8_DIR
+else
+    echo "vim-flake8 already exists at $FLAKE8_DIR"
+fi
+
+if [ ! -d "$JEDI_DIR" ]; then
+    git clone $JEDI_REPO $JEDI_DIR
+else
+    echo "jedi-vim already exists at $JEDI_DIR"
+fi
+
+# If using Kali Linux, install vim-nox
+if [ "$DISTRIBUTION" = "Kali GNU/Linux" ]; then
+    if ! dpkg -l | grep -q vim-nox; then
+        echo "vim-nox not found, installing..."
+        sudo apt-get install -y vim-nox
+    else
+        echo "vim-nox is already installed, skipping installation."
+    fi
+fi
+
+# Some refereces
+# https://www.youtube.com/watch?v=HKJUILUvkGk
+# https://www.youtube.com/watch?v=WtiAWe2Qnpo
+
